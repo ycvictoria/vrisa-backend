@@ -1,6 +1,31 @@
 -- ============================================================
 --TRIGGERS FOR USER
 
+
+
+-- ============================================================
+-- Crear auth id fot the new user
+-- ============================================================
+CREATE OR REPLACE FUNCTION create_profile_from_auth()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO "user" (
+      auth_id, first_name, last_name, role,
+      authorization_status, account_status
+  )
+  VALUES (
+      NEW.id, '', '', 'citizen',
+      'pendiente', 'activo'
+  );
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_auth_signup
+AFTER INSERT ON auth.users
+FOR EACH ROW EXECUTE FUNCTION create_profile_from_auth();
+
 -- ============================================================
 -- AUDITORÍA DE CAMBIOS DE ESTADOS DEL USUARIO POR ADMIN
 -- ============================================================
@@ -32,7 +57,7 @@ BEGIN
         ) VALUES (
             'CREACION_CUENTA',
             NOW(),
-            v_admin_id,
+            1,
             NEW.idUser,
             'Se creó una nueva cuenta'
         );

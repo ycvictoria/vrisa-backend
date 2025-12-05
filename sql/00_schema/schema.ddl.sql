@@ -25,36 +25,45 @@ CREATE TYPE role_enum AS ENUM (
 
 CREATE TABLE "user" (
     idUser SERIAL,
+    auth_id UUID UNIQUE,  -- opcional, no FK para mock
+    email TEXT UNIQUE NOT NULL,
+
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     role role_enum NOT NULL,
     registration_date DATE NOT NULL DEFAULT NOW(),
     authorization_status authorization_status_enum NOT NULL,
     account_status account_status_enum NOT NULL,
+
     CONSTRAINT user_pk PRIMARY KEY (idUser),
+    CONSTRAINT user_email_ck CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
     CONSTRAINT user_firstname_ck CHECK (first_name <> ''),
     CONSTRAINT user_lastname_ck CHECK (last_name <> '')
 );
 
-CREATE TABLE "login" (
-    idUser INT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    token TEXT,
-    last_access DATE,
+
+DROP TABLE IF EXISTS login;
+
+CREATE TABLE login (
+    idLogin SERIAL PRIMARY KEY,
+    idUser INT NOT NULL REFERENCES "user"(idUser),
+    session_id UUID NOT NULL,
+    login_time TIMESTAMP NOT NULL DEFAULT NOW(),
+    logout_time TIMESTAMP,
+    ip_address TEXT,
+    user_agent TEXT,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT login_pk PRIMARY KEY (idUser),
-    CONSTRAINT login_user_fk FOREIGN KEY (idUser) REFERENCES "user"(idUser),
-    CONSTRAINT login_email_ck CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
-    CONSTRAINT login_password_ck CHECK (password_hash <> '')
+
+    CONSTRAINT login_session_unique UNIQUE (session_id)
 );
+
 
 CREATE TABLE "institution" (
     idInstitution SERIAL,
     name TEXT NOT NULL,
     logo TEXT NOT NULL,
-    address TEXT NOT NULL,
     idUser INT NOT NULL,
+    address TEXT NOT NULL,
     CONSTRAINT institution_pk PRIMARY KEY (idInstitution),
     CONSTRAINT institution_user_fk FOREIGN KEY (idUser) REFERENCES "user"(idUser),
     CONSTRAINT institution_name_ck CHECK (name <> ''),
