@@ -6,7 +6,7 @@ const MIGRATIONS_DIR = path.join(__dirname, "supabase/migrations");
 const BASE_DIR = path.join(__dirname, "sql");
 
 // Carpetas dentro de /sql que se deben procesar
-const DIRECTORIES = ["00_schema", "01_functions", "02_triggers", "03_procedures","04_views","05_indexes"];
+const DIRECTORIES = ["00_schema", "01_functions", "02_triggers", "03_procedures","04_views","05_indexes", "06_seeds"];
 
 // Timestamp para el nombre de archivos
 

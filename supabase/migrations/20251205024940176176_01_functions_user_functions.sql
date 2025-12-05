@@ -39,6 +39,59 @@ LANGUAGE sql AS $$
     SELECT * FROM "user" WHERE idUser = p_idUser;
 $$;
 
+--CURRENT USER AUTH ID
+CREATE OR REPLACE FUNCTION get_current_user()
+RETURNS TABLE (
+    idUser INT,
+    first_name TEXT,
+    last_name TEXT,
+    role role_enum,
+    authorization_status authorization_status_enum,
+    account_status account_status_enum
+)
+LANGUAGE sql
+SECURITY DEFINER
+AS $$
+    SELECT 
+        u.idUser,
+        u.first_name,
+        u.last_name,
+        u.role,
+        u.authorization_status,
+        u.account_status
+    FROM "user" u
+    WHERE u.auth_id = auth.uid();
+$$;
+--SELECT user with institution or station view
+
+CREATE OR REPLACE FUNCTION get_profile_()
+RETURNS TABLE (
+    idUser INT,
+    first_name TEXT,
+    last_name TEXT,
+    role role_enum,
+    institution_name TEXT,
+    authorization_status authorization_status_enum,
+    account_status account_status_enum
+)
+LANGUAGE sql
+SECURITY DEFINER
+AS $$
+    SELECT 
+        u.idUser,
+        u.first_name,
+        u.last_name,
+        u.role,
+        i.name AS institution_name,
+        u.authorization_status,
+        u.account_status
+    FROM "user" u
+    LEFT JOIN institution i ON u.idUser = i.idUser
+    JOIN network_user_station n on n.idUser= i.idUser
+    WHERE u.auth_id = auth.uid();
+$$;
+
+
 -- GENERIC UPDATE
 CREATE OR REPLACE FUNCTION update_user_generic(
     p_idUser INT,
@@ -97,5 +150,8 @@ BEGIN
     DELETE FROM "user" WHERE idUser = p_idUser;
 END;
 $$;
+
+
+
 
 -- ============================================================
