@@ -33,6 +33,28 @@ LANGUAGE sql AS $$
     SELECT * FROM "station" WHERE idStation = p_idStation;
 $$;
 
+CREATE OR REPLACE FUNCTION get_all_stations()
+RETURNS TABLE (
+  idStation INT,
+  name TEXT,
+  status TEXT,
+  opening_date DATE,
+  closing_date DATE,
+  idTechnician INT
+)
+LANGUAGE sql
+AS $$
+  SELECT 
+    s.idStation,
+    s.name,
+    s.status,
+    s.opening_date,
+    s.closing_date,
+    s.idTechnician
+  FROM station s
+  ORDER BY s.name;
+$$;
+
 -- GENERIC UPDATE
 CREATE OR REPLACE FUNCTION update_station_generic(
     p_idStation INT,

@@ -10,8 +10,8 @@ CREATE TYPE authorization_status_enum AS ENUM (
 
 CREATE TYPE account_status_enum AS ENUM (
     'activo',
-    'inactivo',
-    'suspendido'
+    'inactivo'
+    
 );
 
 CREATE TYPE role_enum AS ENUM (
