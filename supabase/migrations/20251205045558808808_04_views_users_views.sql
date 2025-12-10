@@ -15,9 +15,7 @@ SELECT
     i.address AS institution_address
 FROM "user" u
 JOIN research_from_institution rfi ON u.idUser = rfi.idUser
-JOIN institution i ON rfi.idInstitution = i.idInstitution
-WHERE u.role = 'researcher';
-
+JOIN institution i ON rfi.idInstitution = i.idInstitution;
 
 -- USER ↔ STATION
 -- ============================================================
@@ -68,3 +66,17 @@ SELECT
     authorization_status,
     account_status
 FROM "user";
+
+CREATE OR REPLACE VIEW institution_researchers AS
+SELECT 
+    u.idUser,
+    u.first_name,
+    u.last_name,
+    u.role,
+    u.account_status,
+    u.authorization_status,
+    i.idInstitution,
+    i.name AS institution_name,
+    i.address
+FROM "user" u
+LEFT JOIN institution i ON u.idUser = i.idUser;

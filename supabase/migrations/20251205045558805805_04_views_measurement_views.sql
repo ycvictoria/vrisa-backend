@@ -1,3 +1,8 @@
+
+
+-- ============================================================
+--  VIEWS  FOR MEASUREMENTS
+-- ============================================================
 CREATE OR REPLACE VIEW measurement_full AS
 SELECT 
     m.idMeasurement,

@@ -26,11 +26,18 @@ LANGUAGE sql AS $$
     SELECT * FROM "sensor";
 $$;
 
--- SELECT BY ID
+-- SELECT BY ID SENSOR
 CREATE OR REPLACE FUNCTION get_sensor_by_id(p_idSensor INT)
 RETURNS SETOF "sensor"
 LANGUAGE sql AS $$
     SELECT * FROM "sensor" WHERE idSensor = p_idSensor;
+$$;
+
+-- SELECT BY STATION
+CREATE OR REPLACE FUNCTION get_sensor_by_station(p_idStation INT)
+RETURNS SETOF "sensor"
+LANGUAGE sql AS $$
+    SELECT * FROM "sensor" WHERE idStation = p_idStation;
 $$;
 
 -- GENERIC UPDATE

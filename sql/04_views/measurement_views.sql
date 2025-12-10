@@ -1,3 +1,8 @@
+
+
+-- ============================================================
+--  VIEWS  FOR MEASUREMENTS
+-- ============================================================
 CREATE OR REPLACE VIEW measurement_full AS
 SELECT 
     m.idMeasurement,
@@ -77,19 +82,6 @@ JOIN variable v ON m.idParameter = v.idVariable
 JOIN sensor s ON m.idSensor = s.idSensor
 JOIN station st ON s.idStation = st.idStation;
 
-CREATE OR REPLACE VIEW user_institution AS
-SELECT 
-    u.idUser,
-    u.first_name,
-    u.last_name,
-    u.role,
-    u.account_status,
-    u.authorization_status,
-    i.idInstitution,
-    i.name AS institution_name,
-    i.address
-FROM "user" u
-LEFT JOIN institution i ON u.idUser = i.idUser;
 
 CREATE OR REPLACE VIEW active_sensors AS
 SELECT *

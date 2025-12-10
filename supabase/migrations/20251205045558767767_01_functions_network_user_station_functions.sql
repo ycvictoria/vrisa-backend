@@ -22,6 +22,20 @@ LANGUAGE sql AS $$
     SELECT * FROM "network_user_station";
 $$;
 
+
+-- SELECT BY ID USER
+CREATE OR REPLACE FUNCTION get_network_user_station_by_user(p_idUser INT)
+RETURNS SETOF "network_user_station"
+LANGUAGE sql AS $$
+    SELECT * FROM "network_user_station" WHERE idUser = p_idUser;
+$$;
+
+-- SELECT BY ID STATION
+CREATE OR REPLACE FUNCTION get_network_user_station_by_station(p_idStation INT)
+RETURNS SETOF "network_user_station"
+LANGUAGE sql AS $$
+    SELECT * FROM "network_user_station" WHERE idStation = p_idStation;
+$$;
 -- GENERIC UPDATE
 CREATE OR REPLACE FUNCTION update_network_user_station_generic(
     p_idUser INT,

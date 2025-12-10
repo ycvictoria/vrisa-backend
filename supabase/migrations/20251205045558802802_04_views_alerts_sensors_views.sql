@@ -1,7 +1,7 @@
 
 
 -- ============================================================
--- 3) ALERTAS POR ESTACIÓN
+--  ALERTAS POR ESTACIÓN
 -- ============================================================
 
 CREATE OR REPLACE VIEW alert_by_station AS
@@ -23,7 +23,7 @@ JOIN station st ON s.idStation = st.idStation;
 
 
 -- ============================================================
--- 4) ALERTAS POR SENSOR
+--  ALERTAS POR SENSOR
 -- ============================================================
 
 CREATE OR REPLACE VIEW alert_by_sensor AS
@@ -42,7 +42,7 @@ JOIN sensor s ON m.idSensor = s.idSensor;
 
 
 -- ============================================================
--- 5) SENSOR POR ESTACIÓN (LISTA DE SENSORES DE UNA ESTACIÓN)
+-- SENSOR POR ESTACIÓN (LISTA DE SENSORES DE UNA ESTACIÓN)
 -- ============================================================
 
 CREATE OR REPLACE VIEW sensors_by_station AS
@@ -60,7 +60,7 @@ JOIN station st ON s.idStation = st.idStation;
 
 
 -- ============================================================
--- 6) MAINTENANCE POR ESTACIÓN
+--  MAINTENANCE POR ESTACIÓN
 -- ============================================================
 
 CREATE OR REPLACE VIEW maintenance_by_station AS

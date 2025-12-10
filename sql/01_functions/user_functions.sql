@@ -2,26 +2,56 @@
 -- USER FUNCTIONS (CRUD + GENERIC UPDATE + SPECIAL UPDATES)
 
 -- INSERT
-CREATE OR REPLACE FUNCTION insert_user(
-    p_first_name TEXT,
-    p_last_name TEXT,
-    p_role TEXT,
-    p_registration_date DATE,
-    p_authorization_status TEXT,
-    p_account_status TEXT
+
+CREATE OR REPLACE FUNCTION create_user(
+  _email TEXT,
+  _first_name TEXT,
+  _last_name TEXT,
+  _role role_enum,
+  _authorization_status authorization_status_enum DEFAULT 'pendiente',
+  _account_status account_status_enum DEFAULT 'inactivo'
 )
-RETURNS TABLE (idUser INT)
-LANGUAGE plpgsql AS $$
+RETURNS TABLE (
+  idUser INT,
+  email TEXT,
+  first_name TEXT,
+  last_name TEXT,
+  role role_enum,
+  authorization_status authorization_status_enum,
+  account_status account_status_enum
+)
+LANGUAGE plpgsql
+AS $$
 BEGIN
-    RETURN QUERY
-    INSERT INTO "user" (
-        first_name, last_name, role, registration_date,
-        authorization_status, account_status
-    )
-    VALUES (
-        p_first_name, p_last_name, p_role, p_registration_date,
-        p_authorization_status, p_account_status
-    ) RETURNING idUser;
+  INSERT INTO "user" (
+    auth_id,
+    email,
+    first_name,
+    last_name,
+    role,
+    authorization_status,
+    account_status
+  )
+  VALUES (
+    NULL,
+    _email,
+    _first_name,
+    _last_name,
+    _role,
+    _authorization_status,
+    _account_status
+  )
+  RETURNING
+    "idUser",
+    email,
+    first_name,
+    last_name,
+    role,
+    authorization_status,
+    account_status
+  INTO idUser, email, first_name, last_name, role, authorization_status, account_status;
+
+  RETURN;
 END;
 $$;
 
@@ -118,18 +148,21 @@ END;
 $$;
 
 -- SPECIAL UPDATES
+
+--activar cuenta si estuvo inactiva , ya autorizado el registro
 CREATE OR REPLACE FUNCTION activate_user(p_idUser INT)
 RETURNS VOID LANGUAGE plpgsql AS $$
 BEGIN
-    UPDATE "user" SET account_status = 'active'
+    UPDATE "user" SET account_status = 'activo'
     WHERE idUser = p_idUser;
 END;
 $$;
 
+--inactivar cuenta usuario ya autorizaddo el registro
 CREATE OR REPLACE FUNCTION deactivate_user(p_idUser INT)
 RETURNS VOID LANGUAGE plpgsql AS $$
 BEGIN
-    UPDATE "user" SET account_status = 'inactive'
+    UPDATE "user" SET account_status = 'inactivo'
     WHERE idUser = p_idUser;
 END;
 $$;
@@ -137,7 +170,7 @@ $$;
 CREATE OR REPLACE FUNCTION authorize_user(p_idUser INT)
 RETURNS VOID LANGUAGE plpgsql AS $$
 BEGIN
-    UPDATE "user" SET authorization_status = 'authorized'
+    UPDATE "user" SET authorization_status = 'aprobado'
     WHERE idUser = p_idUser;
 END;
 $$;
@@ -152,6 +185,26 @@ END;
 $$;
 
 
+--autorizar el registro de un usuario
+CREATE OR REPLACE FUNCTION authorize_user_registration(_id INTEGER)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE user
+  SET authorization_status = 'aprobado'
+  SET account_status= 'activo'
+  WHERE iduser = _id;
+END;
+$$ LANGUAGE plpgsql;
 
+--rechazar el registro de un usuario
+CREATE OR REPLACE FUNCTION reject_user_registration(_id INTEGER)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE user
+  SET authorization_status = 'rechazado'
+
+  WHERE iduser = _id;
+END;
+$$ LANGUAGE plpgsql;
 
 -- ============================================================

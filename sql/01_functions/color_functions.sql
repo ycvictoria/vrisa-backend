@@ -16,3 +16,9 @@ BEGIN
     WHERE idInstitution = p_idInstitution;
 END;
 $$;
+-- SELECT ALL
+CREATE OR REPLACE FUNCTION get_colors()
+RETURNS SETOF "color"
+LANGUAGE sql AS $$
+    SELECT * FROM "color";
+$$;
