@@ -13,7 +13,7 @@ yarn install
 npm run dev
 
 ## Abrir el navegador en
-[Localhost 3000](http://localhost:3000) 
+[Localhost 3000](http://localhost:3000/dashboard/admin/users)
 
 
 ## Paquetes principales usados:
@@ -41,5 +41,6 @@ Node.js / Express (backend complementario)
 Proyecto académico VRISA — Monitoreo Ambiental Inteligente
 
 Desarrollado por: Victoria Yuan, Wendy Yepez y Miguel Romero
+
 
 
